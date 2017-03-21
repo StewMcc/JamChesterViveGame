@@ -7,12 +7,12 @@ public class Trophy : VRTK_InteractableObject {
 	const float kMaxRemainingPercentage = 1.0f;
 
 	public enum CleaningRule {
-		kNone, kBrushed, kWiped, kSponged, kSprayed
+		kNone, kBrushed, kWiped, kSponged, kSprayedBlue, kSprayedGreen, kSprayedPurple
 	}
 
 	[Header("Trophy Settings")]
 	[SerializeField]
-	CleaningRule[] cleaningRules = new CleaningRule[4];
+	CleaningRule[] cleaningRules = new CleaningRule[1];
 
 	[SerializeField]
 	Renderer trophyBaseRenderer = null;
@@ -27,7 +27,7 @@ public class Trophy : VRTK_InteractableObject {
 	private float remainingBrushedPercentage_ = kInitialRemainingPercentage;
 	private float remainingWipedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSpongedPercentage_ = kInitialRemainingPercentage;
-	private float remainingSprayedPercentage_ = kInitialRemainingPercentage;
+	private float remainingSprayedBluePercentage_ = kInitialRemainingPercentage;
 
 	protected override void Awake() {
 		trophyTopRenderer.material.EnableKeyword("_EMISSION");
@@ -47,9 +47,9 @@ public class Trophy : VRTK_InteractableObject {
 					numberOfRules_++;
 					remainingSpongedPercentage_ = kMaxRemainingPercentage;
 					break;
-				case CleaningRule.kSprayed:
+				case CleaningRule.kSprayedBlue:
 					numberOfRules_++;
-					remainingSprayedPercentage_ = kMaxRemainingPercentage;
+					remainingSprayedBluePercentage_ = kMaxRemainingPercentage;
 					break;
 			}
 		}
@@ -57,11 +57,10 @@ public class Trophy : VRTK_InteractableObject {
 	}
 
 	public bool IsClean() {
-		return (remainingBrushedPercentage_ <= 0) && (remainingWipedPercentage_ <= 0) && (remainingSpongedPercentage_ <= 0) && (remainingSprayedPercentage_ <= 0);
+		return (remainingBrushedPercentage_ <= 0) && (remainingWipedPercentage_ <= 0) && (remainingSpongedPercentage_ <= 0) && (remainingSprayedBluePercentage_ <= 0);
 	}
 
-	public void CleanTrophy(CleaningRule cleaningType, float amount) {
-		Debug.Log("CleaningTrophy");
+	public void CleanTrophy(CleaningRule cleaningType, float amount) {		
 		switch (cleaningType) {
 			case CleaningRule.kBrushed:
 				remainingBrushedPercentage_ -= amount;
@@ -72,8 +71,8 @@ public class Trophy : VRTK_InteractableObject {
 			case CleaningRule.kSponged:
 				remainingSpongedPercentage_ -= amount;
 				break;
-			case CleaningRule.kSprayed:
-				remainingSprayedPercentage_ -= amount;
+			case CleaningRule.kSprayedBlue:
+				remainingSprayedBluePercentage_ -= amount;
 				break;
 		}	
 		UpdateEmissiveValue();
@@ -89,14 +88,14 @@ public class Trophy : VRTK_InteractableObject {
 		if (remainingSpongedPercentage_ < 0) {
 			remainingSpongedPercentage_ = 0;
 		}
-		if (remainingSprayedPercentage_ < 0) {
-			remainingSprayedPercentage_ = 0;
+		if (remainingSprayedBluePercentage_ < 0) {
+			remainingSprayedBluePercentage_ = 0;
 		}
 	}
 
 	private void UpdateEmissiveValue() {
 		ClampPercentages();
-		float colorMod = (remainingBrushedPercentage_ + remainingWipedPercentage_ + remainingSpongedPercentage_ + remainingSprayedPercentage_) / (kMaxRemainingPercentage * numberOfRules_);
+		float colorMod = (remainingBrushedPercentage_ + remainingWipedPercentage_ + remainingSpongedPercentage_ + remainingSprayedBluePercentage_) / (kMaxRemainingPercentage * numberOfRules_);
 				
 		Color newEmissive = Color.white * colorMod * dirtAmplifier;
 		trophyTopRenderer.material.SetColor("_EmissionColor", newEmissive);
