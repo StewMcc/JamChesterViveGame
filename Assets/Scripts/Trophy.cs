@@ -2,7 +2,10 @@
 using VRTK;
 
 public class Trophy : VRTK_InteractableObject {
-	const float kMaxPercentage_ = 1.0f;
+
+	const float kInitialRemainingPercentage = 0.0f;
+	const float kMaxRemainingPercentage = 1.0f;
+
 	public enum CleaningRule {
 		kNone, kBrushed, kWiped, kSponged, kSprayed
 	}
@@ -17,82 +20,87 @@ public class Trophy : VRTK_InteractableObject {
 	Renderer trophyTopRenderer = null;
 
 	[SerializeField]
-	float dirtyMultiplier = 1.0f;
+	float dirtAmplifier = 2.0f;
 
-	private float percentageBrushed_ = kMaxPercentage_;
-	private float percentageWiped_ = kMaxPercentage_;
-	private float percentageSponged_ = kMaxPercentage_;
-	private float percentageSprayed_ = kMaxPercentage_;
+	private int numberOfRules_ = 0;
 
-	protected override void Awake() {		
+	private float remainingBrushedPercentage_ = kInitialRemainingPercentage;
+	private float remainingWipedPercentage_ = kInitialRemainingPercentage;
+	private float remainingSpongedPercentage_ = kInitialRemainingPercentage;
+	private float remainingSprayedPercentage_ = kInitialRemainingPercentage;
+
+	protected override void Awake() {
+		trophyTopRenderer.material.EnableKeyword("_EMISSION");
+		trophyBaseRenderer.material.EnableKeyword("_EMISSION");
+
 		foreach (var rule in cleaningRules) {
 			switch (rule) {
 				case CleaningRule.kBrushed:
-					percentageBrushed_ = 0.0f;
+					numberOfRules_++;
+					remainingBrushedPercentage_ = kMaxRemainingPercentage;
 					break;
 				case CleaningRule.kWiped:
-					percentageWiped_ = 0.0f;
+					numberOfRules_++;
+					remainingWipedPercentage_ = kMaxRemainingPercentage;
 					break;
 				case CleaningRule.kSponged:
-					percentageSponged_ = 0.0f;
+					numberOfRules_++;
+					remainingSpongedPercentage_ = kMaxRemainingPercentage;
 					break;
 				case CleaningRule.kSprayed:
-					percentageSprayed_ = 0.0f;
+					numberOfRules_++;
+					remainingSprayedPercentage_ = kMaxRemainingPercentage;
 					break;
 			}
 		}
-		SetEmissiveValue(1.0f-((percentageBrushed_ + percentageWiped_ + percentageSponged_ + percentageSprayed_) / (kMaxPercentage_ * 4.0f)));
+		UpdateEmissiveValue();
 	}
-	
+
 	public bool IsClean() {
-		return (percentageBrushed_ >= 1) && (percentageWiped_ >= 1) && (percentageSponged_ >= 1) && (percentageSprayed_ >= 1);
+		return (remainingBrushedPercentage_ <= 0) && (remainingWipedPercentage_ <= 0) && (remainingSpongedPercentage_ <= 0) && (remainingSprayedPercentage_ <= 0);
 	}
 
 	public void CleanTrophy(CleaningRule cleaningType, float amount) {
-		
+		Debug.Log("CleaningTrophy");
 		switch (cleaningType) {
 			case CleaningRule.kBrushed:
-				percentageBrushed_ += amount;
+				remainingBrushedPercentage_ -= amount;
 				break;
 			case CleaningRule.kWiped:
-				percentageWiped_ += amount;
+				remainingWipedPercentage_ -= amount;
 				break;
 			case CleaningRule.kSponged:
-				percentageSponged_ += amount;
+				remainingSpongedPercentage_ -= amount;
 				break;
 			case CleaningRule.kSprayed:
-				percentageSprayed_ += amount;
+				remainingSprayedPercentage_ -= amount;
 				break;
-		}
-		ClampPercentages();
-		SetEmissiveValue(1.0f - ((percentageBrushed_ + percentageWiped_ + percentageSponged_ + percentageSprayed_) / (kMaxPercentage_ * 4.0f)));
+		}	
+		UpdateEmissiveValue();
 	}
-
+	
 	private void ClampPercentages() {
-		if (percentageBrushed_ > kMaxPercentage_) {
-			percentageBrushed_ = kMaxPercentage_;
+		if(remainingBrushedPercentage_ < 0) {
+			remainingBrushedPercentage_ = 0;
 		}
-		if (percentageWiped_ > kMaxPercentage_) {
-			percentageWiped_ = kMaxPercentage_;
+		if (remainingWipedPercentage_ < 0) {
+			remainingWipedPercentage_ = 0;
 		}
-		if (percentageSponged_ > kMaxPercentage_) {
-			percentageSponged_ = kMaxPercentage_;
+		if (remainingSpongedPercentage_ < 0) {
+			remainingSpongedPercentage_ = 0;
 		}
-		if (percentageSprayed_ > kMaxPercentage_) {
-			percentageSprayed_ = kMaxPercentage_;
+		if (remainingSprayedPercentage_ < 0) {
+			remainingSprayedPercentage_ = 0;
 		}
 	}
 
-	private void SetEmissiveValue(float value) {
-		value *= dirtyMultiplier;
-		Debug.Log("EmissiveValue: " + value);
-		// change texture cleanliness :/		
-		Color baseColor = Color.white; //Replace this with whatever you want for your base color at emission level '1'
-		Color finalColor = baseColor * value;
-
-		trophyTopRenderer.material.SetColor("_EmissionColor", finalColor);
-		trophyBaseRenderer.material.SetColor("_EmissionColor", finalColor);
+	private void UpdateEmissiveValue() {
+		ClampPercentages();
+		float colorMod = (remainingBrushedPercentage_ + remainingWipedPercentage_ + remainingSpongedPercentage_ + remainingSprayedPercentage_) / (kMaxRemainingPercentage * numberOfRules_);
+				
+		Color newEmissive = Color.white * colorMod * dirtAmplifier;
+		trophyTopRenderer.material.SetColor("_EmissionColor", newEmissive);
+		trophyBaseRenderer.material.SetColor("_EmissionColor", newEmissive);
 	}
-
-
+	
 }

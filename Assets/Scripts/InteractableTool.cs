@@ -13,50 +13,58 @@ public class InteractableTool : VRTK_InteractableObject {
 	[SerializeField]
 	bool requiresUseToClean = false;
 
-	private Trophy currentTrophy = null;
+	private Trophy currentTrophy_ = null;
 
-	protected override void OnEnable() {
-		base.OnEnable();
-		if (requiresUseToClean) {
-			GetComponent<VRTK_ControllerEvents>().AliasUseOn += UseItem;
+	private bool isUsing_ = false;
+
+	protected void OnCollisionEnter(Collision collider) {
+		if (collider.gameObject.tag == "Trophy") {
+			currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
 		}
 	}
-	protected override void OnDisable() {
-		base.OnDisable();
-		if (requiresUseToClean) {
-			GetComponent<VRTK_ControllerEvents>().AliasUseOn -= UseItem;
+	
+	protected void OnCollisionExit(Collision collider) {
+		if (collider.gameObject.tag == "Trophy") {
+			// remove the refrence if it is the current trophy leaving.
+			if(collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+				currentTrophy_ = null;
+			}
 		}
 	}
 
 	protected void OnTriggerEnter(Collider collider) {
 		if (collider.gameObject.tag == "Trophy") {
-			currentTrophy = collider.gameObject.GetComponent<Trophy>();
+			currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
 		}
 	}
-	
+
 	protected void OnTriggerExit(Collider collider) {
 		if (collider.gameObject.tag == "Trophy") {
-			currentTrophy = null;
+			// remove the refrence if it is the current trophy leaving.
+			if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+				currentTrophy_ = null;
+			}
 		}
 	}
 
-	// clean the trophy if we have one, and the tool doesnt require use to clean the item.
 	protected override void Update() {
 		base.Update();
-		if(!requiresUseToClean && currentTrophy) {
-			currentTrophy.CleanTrophy(cleaningType, cleaningRate*Time.deltaTime);
-		}
-
-		// CleaningRule specific updates
+		if(currentTrophy_) {
+			if (!requiresUseToClean) {
+				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
+			}else if (isUsing_) {
+				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
+			}
+		}		
+	}
+		
+	public override void StartUsing(GameObject usingObject) {
+		base.StartUsing(usingObject);
+		isUsing_ = true;
 	}
 
-	// clean the trophy if we have one, when the tool is used.
-	protected virtual void UseItem(object sender, ControllerInteractionEventArgs e) {
-		Debug.Log("tool used");
-		if (currentTrophy) {
-			currentTrophy.CleanTrophy(cleaningType, cleaningRate);
-		}
-		// Clean the trophy specific on use.
+	public override void StopUsing(GameObject previousUsingObject) {
+		base.StopUsing(previousUsingObject);
+		isUsing_ = false;
 	}
-
 }
