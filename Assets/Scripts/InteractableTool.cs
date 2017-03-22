@@ -30,19 +30,19 @@ public class InteractableTool : VRTK_InteractableObject {
 		}
 	}
 
-	protected void OnCollisionEnter(Collision collider) {
+	protected void OnCollisionEnter(Collision collision) {
 		if (requiresContact) {
-			if (collider.gameObject.tag == "Trophy") {
-				currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
+			if (collision.gameObject.tag == "Trophy") {
+				currentTrophy_ = collision.gameObject.GetComponent<Trophy>();
 			}
 		}
 	}
 
-	protected void OnCollisionExit(Collision collider) {
+	protected void OnCollisionExit(Collision collision) {
 		if (requiresContact) {
-			if (collider.gameObject.tag == "Trophy") {
+			if (collision.gameObject.tag == "Trophy") {
 				// remove the refrence if it is the current trophy leaving.
-				if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+				if (collision.gameObject.GetComponent<Trophy>() == currentTrophy_) {
 					currentTrophy_ = null;
 				}
 			}
@@ -80,7 +80,7 @@ public class InteractableTool : VRTK_InteractableObject {
 			}
 		}
 	}
-
+	
 	public override void StartUsing(GameObject usingObject) {
 		base.StartUsing(usingObject);
 		if (useEffect) {
