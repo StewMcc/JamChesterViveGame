@@ -46,16 +46,18 @@ public class TrophySpawner : MonoBehaviour {
 
 	private void SpawnInitialItems() {
 		hasSpawnedInitialItems = true;
-		delayAfterToolsTimer_.SetTimer(waves[currentWave_].delayAfterTools);
-		delayAfterToolsTimer_.StartTimer();
+		if (waves[currentWave_].hasToolsAndInstructions) {
+			delayAfterToolsTimer_.SetTimer(waves[currentWave_].delayAfterTools);
+			delayAfterToolsTimer_.StartTimer();
 
-		// Instantiate.
-		Debug.Log("SpawnItems");
-		GameObject newGameObject = Instantiate(waves[currentWave_].instructionLetter, transform);
-		newGameObject.SetActive(true);
+			// Instantiate.
+			Debug.Log("SpawnItems");
+			GameObject newGameObject = Instantiate(waves[currentWave_].instructionLetter, transform);
+			newGameObject.SetActive(true);
 
-		newGameObject = Instantiate(waves[currentWave_].newTool, transform);
-		newGameObject.SetActive(true);
+			newGameObject = Instantiate(waves[currentWave_].newTool, transform);
+			newGameObject.SetActive(true);
+		}
 	}
 
 	private void SpawnTrophy() {
