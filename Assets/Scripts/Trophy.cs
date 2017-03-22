@@ -70,6 +70,7 @@ public class Trophy : VRTK_InteractableObject {
 		return isLocked;
 	}
 	public void LockTrophy() {
+		GetComponent<Rigidbody>().detectCollisions = false;
 		GetComponent<Rigidbody>().isKinematic = true;
 		forcedDropped = true;
 		isGrabbable = false;

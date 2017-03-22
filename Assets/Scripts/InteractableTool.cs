@@ -70,7 +70,7 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	protected override void Update() {
 		base.Update();
-		if (currentTrophy_) {
+		if (currentTrophy_ && IsGrabbed()) {
 			if (!requiresUseToClean) {
 				currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
 			}
