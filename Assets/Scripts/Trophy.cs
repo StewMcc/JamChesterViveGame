@@ -28,8 +28,10 @@ public class Trophy : VRTK_InteractableObject {
 	private float remainingWipedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSpongedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSprayedBluePercentage_ = kInitialRemainingPercentage;
-		
+
 	private bool isLocked = false;
+
+	private float percentageDirty = 0.0f;
 
 	protected override void Awake() {
 		trophyTopRenderer.material.EnableKeyword("_EMISSION");
@@ -59,15 +61,16 @@ public class Trophy : VRTK_InteractableObject {
 	}
 
 	public bool IsClean() {
-		return (remainingBrushedPercentage_ <= 0) && (remainingWipedPercentage_ <= 0) && (remainingSpongedPercentage_ <= 0) && (remainingSprayedBluePercentage_ <= 0);
+		//Debug.Log("IsClean: Percentage Dirty:" + percentageDirty);	
+		return percentageDirty <= 0;
 	}
 
 	public bool IsLocked() {
 		return isLocked;
 	}
-	public void LockTrophy() {			
+	public void LockTrophy() {
 		GetComponent<Rigidbody>().isKinematic = true;
-		forcedDropped = true;		
+		forcedDropped = true;
 		isGrabbable = false;
 		isUsable = false;
 		isLocked = true;
@@ -115,10 +118,12 @@ public class Trophy : VRTK_InteractableObject {
 	private void UpdateEmissiveValue() {
 		ClampPercentages();
 		float colorMod = (remainingBrushedPercentage_ + remainingWipedPercentage_ + remainingSpongedPercentage_ + remainingSprayedBluePercentage_) / (kMaxRemainingPercentage * numberOfRules_);
-				
+		percentageDirty = Mathf.CeilToInt(colorMod * 100.0f);
+		// Debug.Log("Percentage Dirty:" + percentageDirty);	
+
 		Color newEmissive = Color.white * colorMod * dirtAmplifier;
 		trophyTopRenderer.material.SetColor("_EmissionColor", newEmissive);
 		trophyBaseRenderer.material.SetColor("_EmissionColor", newEmissive);
 	}
-	
+
 }

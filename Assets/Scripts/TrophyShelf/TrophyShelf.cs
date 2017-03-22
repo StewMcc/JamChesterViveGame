@@ -4,7 +4,7 @@ public class TrophyShelf : MonoBehaviour {
 
 	[SerializeField]
 	TrophySlot[] slots = new TrophySlot[0];
-	
+
 	bool isFull = false;
 
 	int numFilledSlots = 0;

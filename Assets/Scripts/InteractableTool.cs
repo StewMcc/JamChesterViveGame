@@ -13,36 +13,57 @@ public class InteractableTool : VRTK_InteractableObject {
 	[SerializeField]
 	bool requiresUseToClean = false;
 
+	[SerializeField]
+	bool requiresContact = true;
+
+	[SerializeField]
+	GameObject useEffect = null;
+
 	private Trophy currentTrophy_ = null;
 
 	private bool isUsing_ = false;
 
+	protected override void Awake() {
+		base.Awake();
+		if (useEffect) {
+			useEffect.SetActive(false);
+		}
+	}
+
 	protected void OnCollisionEnter(Collision collider) {
-		if (collider.gameObject.tag == "Trophy") {
-			currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
+		if (requiresContact) {
+			if (collider.gameObject.tag == "Trophy") {
+				currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
+			}
 		}
 	}
 
 	protected void OnCollisionExit(Collision collider) {
-		if (collider.gameObject.tag == "Trophy") {
-			// remove the refrence if it is the current trophy leaving.
-			if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
-				currentTrophy_ = null;
+		if (requiresContact) {
+			if (collider.gameObject.tag == "Trophy") {
+				// remove the refrence if it is the current trophy leaving.
+				if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+					currentTrophy_ = null;
+				}
 			}
 		}
 	}
 
 	protected void OnTriggerEnter(Collider collider) {
-		if (collider.gameObject.tag == "Trophy") {
-			currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
+		if (!requiresContact) {
+			if (collider.gameObject.tag == "Trophy") {
+				currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
+			}
 		}
 	}
 
 	protected void OnTriggerExit(Collider collider) {
-		if (collider.gameObject.tag == "Trophy") {
-			// remove the refrence if it is the current trophy leaving.
-			if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
-				currentTrophy_ = null;
+		if (!requiresContact) {
+			if (collider.gameObject.tag == "Trophy") {
+				// remove the refrence if it is the current trophy leaving.
+				if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+					currentTrophy_ = null;
+				}
 			}
 		}
 	}
@@ -51,21 +72,28 @@ public class InteractableTool : VRTK_InteractableObject {
 		base.Update();
 		if (currentTrophy_) {
 			if (!requiresUseToClean) {
-				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
+				currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
 			}
 			else if (isUsing_) {
-				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
+
+				currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
 			}
 		}
 	}
 
 	public override void StartUsing(GameObject usingObject) {
 		base.StartUsing(usingObject);
-		isUsing_ = true;		
+		if (useEffect) {
+			useEffect.SetActive(true);
+		}
+		isUsing_ = true;
 	}
 
 	public override void StopUsing(GameObject previousUsingObject) {
 		base.StopUsing(previousUsingObject);
+		if (useEffect) {
+			useEffect.SetActive(false);
+		}
 		isUsing_ = false;
 	}
 }

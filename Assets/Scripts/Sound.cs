@@ -11,7 +11,7 @@ public class SoundManager : LittleLot.Singleton<SoundManager> {
 
 	[SerializeField]
 	AudioSource source = null;
-	
+
 	public static void PlaySFX(SFX sfx) {
 		//instance.source.PlayOneShot(instance.soundlist[(int)sfx]);
 	}

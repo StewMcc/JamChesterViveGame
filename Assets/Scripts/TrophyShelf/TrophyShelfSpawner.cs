@@ -16,7 +16,7 @@ public class TrophyShelfSpawner : MonoBehaviour {
 	List<TrophyShelf> shelfList = new List<TrophyShelf>();
 
 	void Start() {
-		
+
 		shelfPrefab.gameObject.SetActive(false);
 
 		// create a clone from prefab
@@ -27,10 +27,10 @@ public class TrophyShelfSpawner : MonoBehaviour {
 
 		// parent it to the spawner
 		shelfList.Last().gameObject.transform.parent = transform;
-		
+
 		// make it active
 		shelfList.Last().gameObject.SetActive(true);
-		
+
 	}
 
 	void Update() {

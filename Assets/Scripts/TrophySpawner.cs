@@ -17,7 +17,7 @@ public class Wave {
 }
 
 public class TrophySpawner : MonoBehaviour {
-	
+
 	[SerializeField]
 	Wave[] waves = new Wave[0];
 
