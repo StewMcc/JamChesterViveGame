@@ -5,6 +5,7 @@ public class Trophy : VRTK_InteractableObject {
 
 	const float kInitialRemainingPercentage = 0.0f;
 	const float kMaxRemainingPercentage = 1.0f;
+	const float kDirtyErrorMargin = 1;
 
 	public enum CleaningRule {
 		kNone, kBrushed, kWiped, kSponged, kSprayedBlue, kSprayedGreen, kSprayedPurple
@@ -62,7 +63,7 @@ public class Trophy : VRTK_InteractableObject {
 
 	public bool IsClean() {
 		//Debug.Log("IsClean: Percentage Dirty:" + percentageDirty);	
-		return percentageDirty <= 0;
+		return percentageDirty <= kDirtyErrorMargin;
 	}
 
 	public bool IsLocked() {

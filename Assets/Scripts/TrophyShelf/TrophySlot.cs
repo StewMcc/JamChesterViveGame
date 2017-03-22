@@ -35,6 +35,7 @@ public class TrophySlot : MonoBehaviour {
 			// snap it to the clamp point.
 			trophy.transform.rotation = clampLocked.rotation;
 			trophy.transform.position = clampLocked.position;
+			trophy.transform.parent = transform;
 
 			// fill a slot in the shelf
 			trophyShelf.SlotFilled();
