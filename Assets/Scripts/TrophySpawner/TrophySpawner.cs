@@ -1,21 +1,5 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class Wave {
-
-	public GameObject[] trophies = null;
-
-	public GameObject instructionLetter = null;
-
-	public GameObject newTool = null;
-
-	public float respawnTime = 0.0f;
-
-	public float delayAfterTools = 0.0f;
-
-	public float delayAfterWaveEnds = 0.0f;
-}
-
 public class TrophySpawner : MonoBehaviour {
 
 	[SerializeField]
@@ -77,11 +61,11 @@ public class TrophySpawner : MonoBehaviour {
 	private void SpawnTrophy() {
 		// Instantiate.
 		Debug.Log("SpawnTrophy");
-		// TODO:: Actually Instantiate the Trophyies.
-		// waves[currentWave_].trophies[currentTrophy_];	
+		GameObject newGameObject = Instantiate(waves[currentWave_].trophies[currentTrophy_], transform);
+		newGameObject.SetActive(true);
 		SoundManager.PlaySFX(SoundManager.SFX.kSpawn);
 		currentTrophy_++;
-		/// if none left start the next wave
+		// if none left start the next wave
 		if (currentTrophy_ >= waves[currentWave_].trophies.Length) {
 			Debug.Log("DelayedWave");
 			delayWaveEndTimer_.SetTimer(waves[currentWave_].delayAfterWaveEnds);
