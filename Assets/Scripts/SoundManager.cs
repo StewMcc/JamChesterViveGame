@@ -3,17 +3,20 @@
 public class SoundManager : LittleLot.Singleton<SoundManager> {
 
 	public enum SFX {
-		kBrushed, kSponged, kWiped, kSprayed, kSpawn, kCompletedGood,
-		kCompletedBad, kDrinking, kGameOver, kTrophyOnFloor, kStamp
+		kBrushed, kSponged, kWiped, kSprayed, kSpawn, kClean, kCompletedGood,
+		kCompletedBad
 	};
+	[SerializeField]
+	SFX debugLayoutEnum;
+
 	[SerializeField]
 	AudioClip[] soundlist = new AudioClip[0];
 
 	[SerializeField]
 	AudioSource source = null;
 
-	public static void PlaySFX(SFX sfx) {
-		//instance.source.PlayOneShot(instance.soundlist[(int)sfx]);
+	public static void PlaySFX(SFX sfx,float volumeScale = 1.0f) {
+		instance.source.PlayOneShot(instance.soundlist[(int)sfx], volumeScale);
 	}
 
 }

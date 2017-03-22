@@ -23,7 +23,6 @@ public class TrophySlot : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		// check if it can collide with the slot
 		if (!isUsed && collider.tag == "Trophy") {
-
 			// get the trophy
 			Trophy trophy = collider.gameObject.GetComponent<Trophy>();
 
@@ -42,8 +41,7 @@ public class TrophySlot : MonoBehaviour {
 
 			Color previousColor = outlineRenderer.material.GetColor("_Color");
 
-			if (trophy.IsClean()) {
-				// Debug.Log("Clean Trophy Slotted");
+			if (trophy.IsClean()) {				
 				SoundManager.PlaySFX(SoundManager.SFX.kCompletedGood);
 
 				Color newColor = Color.green;
@@ -51,7 +49,6 @@ public class TrophySlot : MonoBehaviour {
 				outlineRenderer.material.SetColor("_Color", newColor);
 			}
 			else {
-				// Debug.Log("Dirty Trophy Slotted");
 				SoundManager.PlaySFX(SoundManager.SFX.kCompletedBad);
 
 				Color newColor = Color.red;

@@ -50,8 +50,7 @@ public class TrophySpawner : MonoBehaviour {
 			delayAfterToolsTimer_.SetTimer(waves[currentWave_].delayAfterTools);
 			delayAfterToolsTimer_.StartTimer();
 
-			// Instantiate.
-			Debug.Log("SpawnItems");
+			SoundManager.PlaySFX(SoundManager.SFX.kSpawn);			
 			GameObject newGameObject = Instantiate(waves[currentWave_].instructionLetter, transform);
 			newGameObject.SetActive(true);
 
@@ -61,15 +60,13 @@ public class TrophySpawner : MonoBehaviour {
 	}
 
 	private void SpawnTrophy() {
-		// Instantiate.
-		Debug.Log("SpawnTrophy");
 		GameObject newGameObject = Instantiate(waves[currentWave_].trophies[currentTrophy_], transform);
 		newGameObject.SetActive(true);
 		SoundManager.PlaySFX(SoundManager.SFX.kSpawn);
 		currentTrophy_++;
+
 		// if none left start the next wave
 		if (currentTrophy_ >= waves[currentWave_].trophies.Length) {
-			Debug.Log("DelayedWave");
 			delayWaveEndTimer_.SetTimer(waves[currentWave_].delayAfterWaveEnds);
 			delayWaveEndTimer_.StartTimer();
 

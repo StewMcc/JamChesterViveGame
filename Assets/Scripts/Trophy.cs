@@ -5,7 +5,7 @@ public class Trophy : VRTK_InteractableObject {
 
 	const float kInitialRemainingPercentage = 0.0f;
 	const float kMaxRemainingPercentage = 1.0f;
-	const float kDirtyErrorMargin = 1;
+	const float kDirtyErrorMargin = 6;
 
 	public enum CleaningRule {
 		kNone, kBrushed, kWiped, kSponged, kSprayedBlue, kSprayedGreen, kSprayedPurple
@@ -29,10 +29,14 @@ public class Trophy : VRTK_InteractableObject {
 	private float remainingWipedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSpongedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSprayedBluePercentage_ = kInitialRemainingPercentage;
+	private float remainingSprayedGreenPercentage_ = kInitialRemainingPercentage;
+	private float remainingSprayedPurplePercentage_ = kInitialRemainingPercentage;
 
 	private bool isLocked = false;
 
 	private float percentageDirty = 0.0f;
+
+	private bool hasPlayedCleanedSFX_ = false;
 
 	protected override void Awake() {
 		trophyTopRenderer.material.EnableKeyword("_EMISSION");
@@ -56,9 +60,17 @@ public class Trophy : VRTK_InteractableObject {
 					numberOfRules_++;
 					remainingSprayedBluePercentage_ = kMaxRemainingPercentage;
 					break;
+				case CleaningRule.kSprayedGreen:
+					numberOfRules_++;
+					remainingSprayedGreenPercentage_ = kMaxRemainingPercentage;
+					break;
+				case CleaningRule.kSprayedPurple:
+					numberOfRules_++;
+					remainingSprayedPurplePercentage_ = kMaxRemainingPercentage;
+					break;
 			}
 		}
-		UpdateEmissiveValue();
+		UpdateEmissiveValue();		
 	}
 
 	public bool IsClean() {
@@ -82,23 +94,36 @@ public class Trophy : VRTK_InteractableObject {
 		if (!isLocked) {
 			switch (cleaningType) {
 				case CleaningRule.kBrushed:
-					SoundManager.PlaySFX(SoundManager.SFX.kBrushed);
+					SoundManager.PlaySFX(SoundManager.SFX.kBrushed,0.2f);
 					remainingBrushedPercentage_ -= amount;
 					break;
 				case CleaningRule.kWiped:
-					SoundManager.PlaySFX(SoundManager.SFX.kWiped);
+					SoundManager.PlaySFX(SoundManager.SFX.kWiped,0.2f);
 					remainingWipedPercentage_ -= amount;
 					break;
 				case CleaningRule.kSponged:
-					SoundManager.PlaySFX(SoundManager.SFX.kSponged);
+					SoundManager.PlaySFX(SoundManager.SFX.kSponged,0.2f);
 					remainingSpongedPercentage_ -= amount;
 					break;
 				case CleaningRule.kSprayedBlue:
-					SoundManager.PlaySFX(SoundManager.SFX.kSprayed);
+					
 					remainingSprayedBluePercentage_ -= amount;
+					break;
+				case CleaningRule.kSprayedGreen:
+					
+					remainingSprayedGreenPercentage_ -= amount;
+					break;
+				case CleaningRule.kSprayedPurple:
+					
+					remainingSprayedPurplePercentage_ -= amount;
 					break;
 			}
 			UpdateEmissiveValue();
+
+			if (IsClean()&& !hasPlayedCleanedSFX_) {
+				hasPlayedCleanedSFX_ = true;
+				SoundManager.PlaySFX(SoundManager.SFX.kClean);
+			}
 		}
 	}
 

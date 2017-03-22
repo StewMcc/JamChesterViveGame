@@ -8,7 +8,7 @@ public class InteractableTool : VRTK_InteractableObject {
 	Trophy.CleaningRule cleaningType = Trophy.CleaningRule.kNone;
 
 	[SerializeField]
-	float cleaningRate = 1.0f;
+	float cleaningRate = 10.0f;
 
 	[SerializeField]
 	bool requiresUseToClean = false;
@@ -21,13 +21,14 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	private Trophy currentTrophy_ = null;
 
-	private bool isUsing_ = false;
+	private LittleLot.SimpleTimer delayClean = new LittleLot.SimpleTimer();
 
 	protected override void Awake() {
 		base.Awake();
 		if (useEffect) {
 			useEffect.SetActive(false);
 		}
+		delayClean.SetTimer(0.2f);
 	}
 
 	protected void OnCollisionEnter(Collision collision) {
@@ -70,13 +71,25 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	protected override void Update() {
 		base.Update();
+		delayClean.Update();
 		if (currentTrophy_ && IsGrabbed()) {
-			if (!requiresUseToClean) {
-				currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
+			if (delayClean.IsFinished()) {
+				if (!requiresUseToClean) {
+					delayClean.StartTimer();
+					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
+					PlayToolSfx();
+				}
+				else if (IsUsing()) {
+					delayClean.StartTimer();
+					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
+				}
 			}
-			else if (isUsing_) {
-
-				currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
+		}
+		if (IsUsing()) {
+			if (delayClean.IsFinished()) {
+				delayClean.StartTimer();
+				PlayToolSfx();
+				StopUsing(GetUsingObject());
 			}
 		}
 	}
@@ -86,14 +99,38 @@ public class InteractableTool : VRTK_InteractableObject {
 		if (useEffect) {
 			useEffect.SetActive(true);
 		}
-		isUsing_ = true;
-	}
+		if (requiresUseToClean) {
+			PlayToolSfx();
+		}
+	}	
 
 	public override void StopUsing(GameObject previousUsingObject) {
 		base.StopUsing(previousUsingObject);
 		if (useEffect) {
 			useEffect.SetActive(false);
 		}
-		isUsing_ = false;
+	}
+
+	private void PlayToolSfx() {
+		switch (cleaningType) {
+			case Trophy.CleaningRule.kBrushed:
+				SoundManager.PlaySFX(SoundManager.SFX.kBrushed, 0.2f);				
+				break;
+			case Trophy.CleaningRule.kWiped:
+				SoundManager.PlaySFX(SoundManager.SFX.kWiped, 0.2f);				
+				break;
+			case Trophy.CleaningRule.kSponged:
+				SoundManager.PlaySFX(SoundManager.SFX.kSponged, 0.2f);				
+				break;
+			case Trophy.CleaningRule.kSprayedBlue:
+				SoundManager.PlaySFX(SoundManager.SFX.kSprayed, 0.2f);
+				break;
+			case Trophy.CleaningRule.kSprayedGreen:
+				SoundManager.PlaySFX(SoundManager.SFX.kSprayed, 0.2f);
+				break;
+			case Trophy.CleaningRule.kSprayedPurple:
+				SoundManager.PlaySFX(SoundManager.SFX.kSprayed, 0.2f);
+				break;
+		}
 	}
 }

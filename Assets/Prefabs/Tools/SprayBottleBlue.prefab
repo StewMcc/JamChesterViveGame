@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 4630260364425326}
   - component: {fileID: 54098591272256152}
   - component: {fileID: 114654205227148728}
+  - component: {fileID: 114414153564126622}
   - component: {fileID: 114504515631965406}
   m_Layer: 0
   m_Name: SprayBottleBlue
@@ -114,7 +115,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1357504008222934}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3058824, y: 0.85, z: 0.43760043}
+  m_LocalPosition: {x: 0.7859, y: 0.85, z: 0.41604584}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4020777633380590}
@@ -240,6 +241,17 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: ac5cd3c11242db640a7ffdd27fe5eceb, type: 3}
+--- !u!114 &114414153564126622
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357504008222934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18055ba762aa3994f9c10208cd088bc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114504515631965406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,17 +272,17 @@ MonoBehaviour:
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
+  grabAttachMechanicScript: {fileID: 114654205227148728}
+  secondaryGrabActionScript: {fileID: 114414153564126622}
   isUsable: 1
   holdButtonToUse: 1
-  useOnlyIfGrabbed: 1
+  useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
   cleaningType: 4
-  cleaningRate: 10
+  cleaningRate: 20
   requiresUseToClean: 1
   requiresContact: 0
   useEffect: {fileID: 1382832114350344}

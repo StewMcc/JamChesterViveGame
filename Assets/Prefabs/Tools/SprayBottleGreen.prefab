@@ -270,7 +270,7 @@ MonoBehaviour:
   allowedUseControllers: 0
   usingState: 0
   cleaningType: 5
-  cleaningRate: 10
+  cleaningRate: 20
   requiresUseToClean: 1
   requiresContact: 0
   useEffect: {fileID: 1382832114350344}
