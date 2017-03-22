@@ -28,6 +28,8 @@ public class Trophy : VRTK_InteractableObject {
 	private float remainingWipedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSpongedPercentage_ = kInitialRemainingPercentage;
 	private float remainingSprayedBluePercentage_ = kInitialRemainingPercentage;
+		
+	private bool isLocked = false;
 
 	protected override void Awake() {
 		trophyTopRenderer.material.EnableKeyword("_EMISSION");
@@ -60,26 +62,43 @@ public class Trophy : VRTK_InteractableObject {
 		return (remainingBrushedPercentage_ <= 0) && (remainingWipedPercentage_ <= 0) && (remainingSpongedPercentage_ <= 0) && (remainingSprayedBluePercentage_ <= 0);
 	}
 
-	public void CleanTrophy(CleaningRule cleaningType, float amount) {		
-		switch (cleaningType) {
-			case CleaningRule.kBrushed:
-				remainingBrushedPercentage_ -= amount;
-				break;
-			case CleaningRule.kWiped:
-				remainingWipedPercentage_ -= amount;
-				break;
-			case CleaningRule.kSponged:
-				remainingSpongedPercentage_ -= amount;
-				break;
-			case CleaningRule.kSprayedBlue:
-				remainingSprayedBluePercentage_ -= amount;
-				break;
-		}	
-		UpdateEmissiveValue();
+	public bool IsLocked() {
+		return isLocked;
 	}
-	
+	public void LockTrophy() {			
+		GetComponent<Rigidbody>().isKinematic = true;
+		forcedDropped = true;		
+		isGrabbable = false;
+		isUsable = false;
+		isLocked = true;
+	}
+
+	public void CleanTrophy(CleaningRule cleaningType, float amount) {
+		if (!isLocked) {
+			switch (cleaningType) {
+				case CleaningRule.kBrushed:
+					SoundManager.PlaySFX(SoundManager.SFX.kBrushed);
+					remainingBrushedPercentage_ -= amount;
+					break;
+				case CleaningRule.kWiped:
+					SoundManager.PlaySFX(SoundManager.SFX.kWiped);
+					remainingWipedPercentage_ -= amount;
+					break;
+				case CleaningRule.kSponged:
+					SoundManager.PlaySFX(SoundManager.SFX.kSponged);
+					remainingSpongedPercentage_ -= amount;
+					break;
+				case CleaningRule.kSprayedBlue:
+					SoundManager.PlaySFX(SoundManager.SFX.kSprayed);
+					remainingSprayedBluePercentage_ -= amount;
+					break;
+			}
+			UpdateEmissiveValue();
+		}
+	}
+
 	private void ClampPercentages() {
-		if(remainingBrushedPercentage_ < 0) {
+		if (remainingBrushedPercentage_ < 0) {
 			remainingBrushedPercentage_ = 0;
 		}
 		if (remainingWipedPercentage_ < 0) {

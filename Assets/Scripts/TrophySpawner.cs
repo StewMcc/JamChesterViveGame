@@ -17,21 +17,18 @@ public class Wave {
 }
 
 public class TrophySpawner : MonoBehaviour {
-
-	[SerializeField]
-	Transform spawnCentre = null;
-
+	
 	[SerializeField]
 	Wave[] waves = new Wave[0];
 
-	SimpleTimer spawnTimer_ = new SimpleTimer();
+	LittleLot.SimpleTimer spawnTimer_ = new LittleLot.SimpleTimer();
 
-	SimpleTimer delayAfterToolsTimer_ = new SimpleTimer();
+	LittleLot.SimpleTimer delayAfterToolsTimer_ = new LittleLot.SimpleTimer();
 
-	SimpleTimer delayWaveEndTimer_ = new SimpleTimer();
+	LittleLot.SimpleTimer delayWaveEndTimer_ = new LittleLot.SimpleTimer();
 
 	bool hasSpawnedInitialItems = false;
-	
+
 	int currentWave_ = 0;
 
 	int currentTrophy_ = 0;
@@ -43,7 +40,7 @@ public class TrophySpawner : MonoBehaviour {
 		spawnTimer_.StartTimer();
 	}
 
-	private void Update() {		
+	private void Update() {
 		if (!hasFinished) {
 			delayWaveEndTimer_.Update();
 			if (delayWaveEndTimer_.IsFinished()) {
@@ -82,7 +79,7 @@ public class TrophySpawner : MonoBehaviour {
 		Debug.Log("SpawnTrophy");
 		// TODO:: Actually Instantiate the Trophyies.
 		// waves[currentWave_].trophies[currentTrophy_];	
-
+		SoundManager.PlaySFX(SoundManager.SFX.kSpawn);
 		currentTrophy_++;
 		/// if none left start the next wave
 		if (currentTrophy_ >= waves[currentWave_].trophies.Length) {
@@ -92,13 +89,13 @@ public class TrophySpawner : MonoBehaviour {
 
 			currentTrophy_ = 0;
 			hasSpawnedInitialItems = false;
-			currentWave_++;			
+			currentWave_++;
 
 			if (currentWave_ >= waves.Length) {
 				hasFinished = true;
 				Debug.Log("GameFinished");
 				return;
-			}			
+			}
 		}
 		spawnTimer_.SetTimer(waves[currentWave_].respawnTime);
 		spawnTimer_.StartTimer();

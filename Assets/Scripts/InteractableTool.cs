@@ -22,11 +22,11 @@ public class InteractableTool : VRTK_InteractableObject {
 			currentTrophy_ = collider.gameObject.GetComponent<Trophy>();
 		}
 	}
-	
+
 	protected void OnCollisionExit(Collision collider) {
 		if (collider.gameObject.tag == "Trophy") {
 			// remove the refrence if it is the current trophy leaving.
-			if(collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
+			if (collider.gameObject.GetComponent<Trophy>() == currentTrophy_) {
 				currentTrophy_ = null;
 			}
 		}
@@ -49,18 +49,19 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	protected override void Update() {
 		base.Update();
-		if(currentTrophy_) {
+		if (currentTrophy_) {
 			if (!requiresUseToClean) {
 				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
-			}else if (isUsing_) {
+			}
+			else if (isUsing_) {
 				currentTrophy_.CleanTrophy(cleaningType, cleaningRate);
 			}
-		}		
+		}
 	}
-		
+
 	public override void StartUsing(GameObject usingObject) {
 		base.StartUsing(usingObject);
-		isUsing_ = true;
+		isUsing_ = true;		
 	}
 
 	public override void StopUsing(GameObject previousUsingObject) {

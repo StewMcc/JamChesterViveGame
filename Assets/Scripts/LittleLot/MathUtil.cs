@@ -41,7 +41,7 @@ namespace LittleLot {
 		/// <param name="transitionTime"> The maximum amount of time it should take to complete. </param>		
 		/// <returns> New position between points. </returns>
 		public static Vector3 SmoothPingPongLerp(Vector3 startPosition, Vector3 endPosition, float transitionTime) {
-			
+
 			// lerped animation between 2 points.
 			return Vector3.Lerp(startPosition, endPosition,
 				Mathf.SmoothStep(0f, 1f, Mathf.PingPong(Time.time / transitionTime, 1f)));
