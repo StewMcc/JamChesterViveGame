@@ -17,17 +17,14 @@ public class InteractableTool : VRTK_InteractableObject {
 	bool requiresContact = true;
 
 	[SerializeField]
-	GameObject useEffect = null;
+	ParticleSystem useEffect = null;
 
 	private Trophy currentTrophy_ = null;
 
 	private LittleLot.SimpleTimer delayClean = new LittleLot.SimpleTimer();
 
 	protected override void Awake() {
-		base.Awake();
-		if (useEffect) {
-			useEffect.SetActive(false);
-		}
+		base.Awake();		
 		delayClean.SetTimer(0.2f);
 	}
 
@@ -81,35 +78,22 @@ public class InteractableTool : VRTK_InteractableObject {
 				}
 				else if (IsUsing()) {
 					delayClean.StartTimer();
-					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
+					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);					
 				}
 			}
-		}
-		if (IsUsing()) {
-			if (delayClean.IsFinished()) {
-				delayClean.StartTimer();
-				PlayToolSfx();
-				StopUsing(GetUsingObject());
-			}
-		}
+		}		
 	}
 	
 	public override void StartUsing(GameObject usingObject) {
 		base.StartUsing(usingObject);
 		if (useEffect) {
-			useEffect.SetActive(true);
+			useEffect.Play(true);
 		}
 		if (requiresUseToClean) {
 			PlayToolSfx();
 		}
 	}	
 
-	public override void StopUsing(GameObject previousUsingObject) {
-		base.StopUsing(previousUsingObject);
-		if (useEffect) {
-			useEffect.SetActive(false);
-		}
-	}
 
 	private void PlayToolSfx() {
 		switch (cleaningType) {

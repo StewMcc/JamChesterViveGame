@@ -22,13 +22,16 @@ public class TrophyShelf : MonoBehaviour {
 	private void Update() {
 
 		if (isMoving_) {
-			// transition between the 2 positions.
+			// transition between the 2 positions.			
 			transform.position = LittleLot.MathUtil.SmoothLerp(
 				startPosition_,
 				endPosition_,
 				startTime_,
 				transitionTime,
 				out isMoving_);
+			foreach (TrophySlot slot in slots) {
+				slot.ClampTrophy();
+			}
 		}
 	}
 

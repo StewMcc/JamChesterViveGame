@@ -70,7 +70,7 @@ public class Trophy : VRTK_InteractableObject {
 					break;
 			}
 		}
-		UpdateEmissiveValue();		
+		UpdateEmissiveValue();
 	}
 
 	public bool IsClean() {
@@ -81,7 +81,9 @@ public class Trophy : VRTK_InteractableObject {
 	public bool IsLocked() {
 		return isLocked;
 	}
+
 	public void LockTrophy() {
+		GetComponent<Rigidbody>().Sleep();
 		GetComponent<Rigidbody>().detectCollisions = false;
 		GetComponent<Rigidbody>().isKinematic = true;
 		forcedDropped = true;
@@ -94,33 +96,33 @@ public class Trophy : VRTK_InteractableObject {
 		if (!isLocked) {
 			switch (cleaningType) {
 				case CleaningRule.kBrushed:
-					SoundManager.PlaySFX(SoundManager.SFX.kBrushed,0.2f);
+					SoundManager.PlaySFX(SoundManager.SFX.kBrushed, 0.2f);
 					remainingBrushedPercentage_ -= amount;
 					break;
 				case CleaningRule.kWiped:
-					SoundManager.PlaySFX(SoundManager.SFX.kWiped,0.2f);
+					SoundManager.PlaySFX(SoundManager.SFX.kWiped, 0.2f);
 					remainingWipedPercentage_ -= amount;
 					break;
 				case CleaningRule.kSponged:
-					SoundManager.PlaySFX(SoundManager.SFX.kSponged,0.2f);
+					SoundManager.PlaySFX(SoundManager.SFX.kSponged, 0.2f);
 					remainingSpongedPercentage_ -= amount;
 					break;
 				case CleaningRule.kSprayedBlue:
-					
+
 					remainingSprayedBluePercentage_ -= amount;
 					break;
 				case CleaningRule.kSprayedGreen:
-					
+
 					remainingSprayedGreenPercentage_ -= amount;
 					break;
 				case CleaningRule.kSprayedPurple:
-					
+
 					remainingSprayedPurplePercentage_ -= amount;
 					break;
 			}
 			UpdateEmissiveValue();
 
-			if (IsClean()&& !hasPlayedCleanedSFX_) {
+			if (IsClean() && !hasPlayedCleanedSFX_) {
 				hasPlayedCleanedSFX_ = true;
 				SoundManager.PlaySFX(SoundManager.SFX.kClean);
 			}
@@ -144,7 +146,13 @@ public class Trophy : VRTK_InteractableObject {
 
 	private void UpdateEmissiveValue() {
 		ClampPercentages();
-		float colorMod = (remainingBrushedPercentage_ + remainingWipedPercentage_ + remainingSpongedPercentage_ + remainingSprayedBluePercentage_) / (kMaxRemainingPercentage * numberOfRules_);
+		float colorMod = (remainingBrushedPercentage_ +
+			remainingWipedPercentage_ + 
+			remainingSpongedPercentage_ + 
+			remainingSprayedBluePercentage_ +
+			remainingSprayedGreenPercentage_ +
+			remainingSprayedPurplePercentage_) 
+			/ (kMaxRemainingPercentage * numberOfRules_);
 		percentageDirty = Mathf.CeilToInt(colorMod * 100.0f);
 		// Debug.Log("Percentage Dirty:" + percentageDirty);	
 

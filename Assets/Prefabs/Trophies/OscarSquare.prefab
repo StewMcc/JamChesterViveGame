@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 1116396503659560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 4258341934937508}
   - {fileID: 4186759060171402}
@@ -270,7 +270,7 @@ MonoBehaviour:
   cleaningRules: 01000000000000000000000000000000
   trophyBaseRenderer: {fileID: 23581494977197948}
   trophyTopRenderer: {fileID: 23654194924239218}
-  dirtAmplifier: 1
+  dirtAmplifier: 1.5
 --- !u!114 &114635422131442754
 MonoBehaviour:
   m_ObjectHideFlags: 1

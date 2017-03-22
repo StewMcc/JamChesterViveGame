@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 1542535404550134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 4342590983691778}
   - {fileID: 4350902665030770}
@@ -224,7 +224,7 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 1
   m_InflateMesh: 1
-  m_SkinWidth: 0.01
+  m_SkinWidth: 0.02
   m_Mesh: {fileID: 4300000, guid: 75a0762d2e6487b49aa6191c037ab3a4, type: 3}
 --- !u!65 &65612727118020478
 BoxCollider:
@@ -289,4 +289,4 @@ MonoBehaviour:
   cleaningRules: 06000000000000000000000000000000
   trophyBaseRenderer: {fileID: 23799827132231432}
   trophyTopRenderer: {fileID: 23144224880079330}
-  dirtAmplifier: 1
+  dirtAmplifier: 1.5

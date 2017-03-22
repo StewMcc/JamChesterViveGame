@@ -9,6 +9,8 @@ public class TrophySlot : MonoBehaviour {
 
 	Renderer outlineRenderer = null;
 
+	Trophy connectedTrophy = null;
+
 	bool isUsed = false;
 
 	void Start() {
@@ -18,6 +20,13 @@ public class TrophySlot : MonoBehaviour {
 
 	public bool IsUsed() {
 		return isUsed;
+	}
+
+	public void ClampTrophy() {
+		// snap it to the clamp point.
+		connectedTrophy.transform.rotation = clampLocked.rotation;
+		connectedTrophy.transform.position = clampLocked.position;
+		connectedTrophy.transform.parent = clampLocked;
 	}
 
 	void OnTriggerEnter(Collider collider) {
@@ -31,10 +40,11 @@ public class TrophySlot : MonoBehaviour {
 
 			trophy.LockTrophy();
 
-			// snap it to the clamp point.
-			trophy.transform.rotation = clampLocked.rotation;
-			trophy.transform.position = clampLocked.position;
-			trophy.transform.parent = transform;
+			connectedTrophy = trophy;
+
+			ClampTrophy();
+
+
 
 			// fill a slot in the shelf
 			trophyShelf.SlotFilled();

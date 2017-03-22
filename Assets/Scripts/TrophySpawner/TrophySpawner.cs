@@ -13,14 +13,17 @@ public class TrophySpawner : MonoBehaviour {
 
 	bool hasSpawnedInitialItems = false;
 
-	int currentWave_ = 0;
+	int currentWaveArrayPosition_ = 0;
 
 	int currentTrophy_ = 0;
 
 	bool hasFinished = false;
 
+	Wave currentWave = null;
+
 	private void Start() {
-		spawnTimer_.SetTimer(waves[currentWave_].respawnTime);
+		currentWave = waves[currentWaveArrayPosition_];
+		spawnTimer_.SetTimer(currentWave.respawnTime);
 		spawnTimer_.StartTimer();
 	}
 
@@ -28,11 +31,10 @@ public class TrophySpawner : MonoBehaviour {
 		if (!hasFinished) {
 			delayWaveEndTimer_.Update();
 			if (delayWaveEndTimer_.IsFinished()) {
-				delayAfterToolsTimer_.Update();
-
 				if (!hasSpawnedInitialItems) {
 					SpawnInitialItems();
 				}
+				delayAfterToolsTimer_.Update();
 
 				if (delayAfterToolsTimer_.IsFinished()) {
 					spawnTimer_.Update();
@@ -45,42 +47,50 @@ public class TrophySpawner : MonoBehaviour {
 	}
 
 	private void SpawnInitialItems() {
+		delayAfterToolsTimer_.SetTimer(currentWave.delayAfterTools);
+		delayAfterToolsTimer_.StartTimer();
 		hasSpawnedInitialItems = true;
-		if (waves[currentWave_].hasToolsAndInstructions) {
-			delayAfterToolsTimer_.SetTimer(waves[currentWave_].delayAfterTools);
-			delayAfterToolsTimer_.StartTimer();
 
+		if (currentWave.hasToolsAndInstructions) {
 			SoundManager.PlaySFX(SoundManager.SFX.kSpawn);			
-			GameObject newGameObject = Instantiate(waves[currentWave_].instructionLetter, transform);
+			GameObject newGameObject = Instantiate(currentWave.instructionLetter, transform);
 			newGameObject.SetActive(true);
 
-			newGameObject = Instantiate(waves[currentWave_].newTool, transform);
+			newGameObject = Instantiate(currentWave.newTool, transform);
 			newGameObject.SetActive(true);
 		}
 	}
 
 	private void SpawnTrophy() {
-		GameObject newGameObject = Instantiate(waves[currentWave_].trophies[currentTrophy_], transform);
+		GameObject newGameObject = Instantiate(currentWave.trophies[currentTrophy_], transform);
 		newGameObject.SetActive(true);
 		SoundManager.PlaySFX(SoundManager.SFX.kSpawn);
 		currentTrophy_++;
 
 		// if none left start the next wave
-		if (currentTrophy_ >= waves[currentWave_].trophies.Length) {
-			delayWaveEndTimer_.SetTimer(waves[currentWave_].delayAfterWaveEnds);
+		if (currentTrophy_ >= currentWave.trophies.Length) {
+			delayWaveEndTimer_.SetTimer(currentWave.delayAfterWaveEnds);
 			delayWaveEndTimer_.StartTimer();
 
 			currentTrophy_ = 0;
 			hasSpawnedInitialItems = false;
-			currentWave_++;
+			currentWaveArrayPosition_++;
 
-			if (currentWave_ >= waves.Length) {
+			if (currentWaveArrayPosition_ >= waves.Length) {
 				hasFinished = true;
 				Debug.Log("GameFinished");
 				return;
 			}
+			currentWave = waves[currentWaveArrayPosition_];
 		}
-		spawnTimer_.SetTimer(waves[currentWave_].respawnTime);
+
+		if (currentWave.hasChangingRespawnTime) {
+			float newRespawnTime = currentWave.respawnTime - currentWave.respawnTimeModifier;
+			if(newRespawnTime > currentWave.lowestRespawnTime) {
+				currentWave.respawnTime = newRespawnTime;
+			}
+		}
+		spawnTimer_.SetTimer(currentWave.respawnTime);
 		spawnTimer_.StartTimer();
 	}
 

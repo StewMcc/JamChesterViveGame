@@ -28,7 +28,7 @@ namespace LittleLot {
 
 		public void Update() {
 			timeRemaining_ -= Time.deltaTime;
-			if (timeRemaining_ < 0) {
+			if (timeRemaining_ <= 0) {
 				isFinished_ = true;
 			}
 		}

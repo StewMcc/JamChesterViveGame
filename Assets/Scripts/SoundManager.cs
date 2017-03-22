@@ -15,7 +15,7 @@ public class SoundManager : LittleLot.Singleton<SoundManager> {
 	[SerializeField]
 	AudioSource source = null;
 
-	public static void PlaySFX(SFX sfx,float volumeScale = 1.0f) {
+	public static void PlaySFX(SFX sfx,float volumeScale = 1.0f) {		
 		instance.source.PlayOneShot(instance.soundlist[(int)sfx], volumeScale);
 	}
 

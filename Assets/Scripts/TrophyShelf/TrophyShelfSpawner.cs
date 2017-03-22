@@ -46,12 +46,15 @@ public class TrophyShelfSpawner : MonoBehaviour {
 		shelfList.Last().gameObject.transform.parent = transform;
 		// move it below the current shelf
 		shelfList.Last().gameObject.transform.position -= new Vector3(0, rowHeight, 0);
-		// make it active
-		shelfList.Last().gameObject.SetActive(true);
 
 		// move all the shelves
 		foreach (TrophyShelf shelf in shelfList) {
 			shelf.MoveShelf(new Vector3(0, rowHeight, 0));
 		}
+
+		// make it active
+		shelfList.Last().gameObject.SetActive(true);
+
+		
 	}
 }
