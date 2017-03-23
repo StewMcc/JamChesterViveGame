@@ -1117,7 +1117,7 @@ MonoBehaviour:
   trophies:
   - {fileID: 0}
   - {fileID: 0}
-  respawnTime: 4
+  respawnTime: 6
   delayAfterWaveEnds: 6
   hasChangingRespawnTime: 0
   lowestRespawnTime: 0
@@ -1534,8 +1534,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trophies:
   - {fileID: 0}
-  respawnTime: 4
-  delayAfterWaveEnds: 4
+  respawnTime: 6
+  delayAfterWaveEnds: 6
   hasChangingRespawnTime: 0
   lowestRespawnTime: 0
   respawnTimeModifier: 0
@@ -2105,8 +2105,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trophies:
   - {fileID: 0}
-  respawnTime: 4
-  delayAfterWaveEnds: 4
+  respawnTime: 6
+  delayAfterWaveEnds: 6
   hasChangingRespawnTime: 0
   lowestRespawnTime: 0
   respawnTimeModifier: 0
