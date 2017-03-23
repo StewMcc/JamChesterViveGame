@@ -1798,27 +1798,13 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  respawnTime: 4
+  respawnTime: 6
   delayAfterWaveEnds: 4
-  hasChangingRespawnTime: 0
-  lowestRespawnTime: 0
-  respawnTimeModifier: 0
-  isRandomPrefab: 0
-  maxNumberOfSpawns: 0
+  hasChangingRespawnTime: 1
+  lowestRespawnTime: 1
+  respawnTimeModifier: 0.01
+  isRandomPrefab: 1
+  maxNumberOfSpawns: 100
   hasToolsAndInstructions: 0
   instructionLetter: {fileID: 0}
   newTool: {fileID: 0}

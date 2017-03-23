@@ -6,8 +6,6 @@ public class SoundManager : LittleLot.Singleton<SoundManager> {
 		kBrushed, kSponged, kWiped, kSprayed, kSpawn, kClean, kCompletedGood,
 		kCompletedBad
 	};
-	[SerializeField]
-	SFX debugLayoutEnum;
 
 	[SerializeField]
 	AudioClip[] soundlist = new AudioClip[0];

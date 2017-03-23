@@ -32,9 +32,9 @@ public class Trophy : VRTK_InteractableObject {
 	private float remainingSprayedGreenPercentage_ = kInitialRemainingPercentage;
 	private float remainingSprayedPurplePercentage_ = kInitialRemainingPercentage;
 
-	private bool isLocked = false;
+	private bool isLocked_ = false;
 
-	private float percentageDirty = 0.0f;
+	private float percentageDirty_ = 0.0f;
 
 	private bool hasPlayedCleanedSFX_ = false;
 
@@ -74,12 +74,12 @@ public class Trophy : VRTK_InteractableObject {
 	}
 
 	public bool IsClean() {
-		//Debug.Log("IsClean: Percentage Dirty:" + percentageDirty);	
-		return percentageDirty <= kDirtyErrorMargin;
+		//Debug.Log("IsClean: Percentage Dirty:" + percentageDirty_);	
+		return percentageDirty_ <= kDirtyErrorMargin;
 	}
 
 	public bool IsLocked() {
-		return isLocked;
+		return isLocked_;
 	}
 
 	public void LockTrophy() {
@@ -89,11 +89,11 @@ public class Trophy : VRTK_InteractableObject {
 		forcedDropped = true;
 		isGrabbable = false;
 		isUsable = false;
-		isLocked = true;
+		isLocked_ = true;
 	}
 
 	public void CleanTrophy(CleaningRule cleaningType, float amount) {
-		if (!isLocked) {
+		if (!isLocked_) {
 			switch (cleaningType) {
 				case CleaningRule.kBrushed:
 					SoundManager.PlaySFX(SoundManager.SFX.kBrushed, 0.2f);
@@ -153,8 +153,8 @@ public class Trophy : VRTK_InteractableObject {
 			remainingSprayedGreenPercentage_ +
 			remainingSprayedPurplePercentage_) 
 			/ (kMaxRemainingPercentage * numberOfRules_);
-		percentageDirty = Mathf.CeilToInt(colorMod * 100.0f);
-		// Debug.Log("Percentage Dirty:" + percentageDirty);	
+		percentageDirty_ = Mathf.CeilToInt(colorMod * 100.0f);
+		// Debug.Log("Percentage Dirty:" + percentageDirty_);	
 
 		Color newEmissive = Color.white * colorMod * dirtAmplifier;
 		trophyTopRenderer.material.SetColor("_EmissionColor", newEmissive);

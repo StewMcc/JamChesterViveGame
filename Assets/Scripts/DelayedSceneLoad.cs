@@ -6,7 +6,7 @@ public class DelayedSceneLoad : MonoBehaviour {
 
 	[SerializeField]
 	float introScreenDelay = 10.0f;
-	// Use this for initialization
+		
 	void Start () {
 		StartCoroutine(LoadGameLevel());
 	}

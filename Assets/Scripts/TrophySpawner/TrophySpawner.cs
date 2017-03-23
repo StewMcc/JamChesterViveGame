@@ -5,33 +5,34 @@ public class TrophySpawner : MonoBehaviour {
 	[SerializeField]
 	Wave[] waves = new Wave[0];
 
-	LittleLot.SimpleTimer spawnTimer_ = new LittleLot.SimpleTimer();
+	private LittleLot.SimpleTimer spawnTimer_ = new LittleLot.SimpleTimer();
 
-	LittleLot.SimpleTimer delayAfterToolsTimer_ = new LittleLot.SimpleTimer();
+	private LittleLot.SimpleTimer delayAfterToolsTimer_ = new LittleLot.SimpleTimer();
 
-	LittleLot.SimpleTimer delayWaveEndTimer_ = new LittleLot.SimpleTimer();
+	private LittleLot.SimpleTimer delayWaveEndTimer_ = new LittleLot.SimpleTimer();
 
-	bool hasSpawnedInitialItems = false;
+	private bool hasSpawnedInitialItems_ = false;
 
-	int currentWaveArrayPosition_ = 0;
+	private int currentWaveArrayPosition_ = 0;
 
-	int currentTrophy_ = 0;
+	private int currentTrophy_ = 0;
+	private int numSpawned_ = -1;
 
-	bool hasFinished = false;
+	private bool hasFinished_ = false;
 
-	Wave currentWave = null;
+	private Wave currentWave_ = null;
 
 	private void Start() {
-		currentWave = waves[currentWaveArrayPosition_];
-		spawnTimer_.SetTimer(currentWave.respawnTime);
+		currentWave_ = waves[currentWaveArrayPosition_];
+		spawnTimer_.SetTimer(currentWave_.respawnTime);
 		spawnTimer_.StartTimer();
 	}
 
 	private void Update() {
-		if (!hasFinished) {
+		if (!hasFinished_) {
 			delayWaveEndTimer_.Update();
 			if (delayWaveEndTimer_.IsFinished()) {
-				if (!hasSpawnedInitialItems) {
+				if (!hasSpawnedInitialItems_) {
 					SpawnInitialItems();
 				}
 				delayAfterToolsTimer_.Update();
@@ -47,50 +48,60 @@ public class TrophySpawner : MonoBehaviour {
 	}
 
 	private void SpawnInitialItems() {
-		delayAfterToolsTimer_.SetTimer(currentWave.delayAfterTools);
+		delayAfterToolsTimer_.SetTimer(currentWave_.delayAfterTools);
 		delayAfterToolsTimer_.StartTimer();
-		hasSpawnedInitialItems = true;
+		hasSpawnedInitialItems_ = true;
 
-		if (currentWave.hasToolsAndInstructions) {
+		if (currentWave_.hasToolsAndInstructions) {
 			SoundManager.PlaySFX(SoundManager.SFX.kSpawn);			
-			GameObject newGameObject = Instantiate(currentWave.instructionLetter, transform);
+			GameObject newGameObject = Instantiate(currentWave_.instructionLetter, transform);
 			newGameObject.SetActive(true);
 
-			newGameObject = Instantiate(currentWave.newTool, transform);
+			newGameObject = Instantiate(currentWave_.newTool, transform);
 			newGameObject.SetActive(true);
 		}
 	}
 
 	private void SpawnTrophy() {
-		GameObject newGameObject = Instantiate(currentWave.trophies[currentTrophy_], transform);
-		newGameObject.SetActive(true);
+		if (currentWave_.isRandomPrefab) {
+			currentTrophy_ = Random.Range(0, currentWave_.trophies.Length);
+			GameObject newGameObject = Instantiate(currentWave_.trophies[currentTrophy_], transform);
+			newGameObject.SetActive(true);			
+			numSpawned_++;
+		}
+		else {			
+			GameObject newGameObject = Instantiate(currentWave_.trophies[currentTrophy_], transform);
+			newGameObject.SetActive(true);
+			currentTrophy_++;
+		}
 		SoundManager.PlaySFX(SoundManager.SFX.kSpawn);
-		currentTrophy_++;
+
+
 
 		// if none left start the next wave
-		if (currentTrophy_ >= currentWave.trophies.Length) {
-			delayWaveEndTimer_.SetTimer(currentWave.delayAfterWaveEnds);
+		if (currentTrophy_ >= currentWave_.trophies.Length || numSpawned_ >= currentWave_.maxNumberOfSpawns) {
+			delayWaveEndTimer_.SetTimer(currentWave_.delayAfterWaveEnds);
 			delayWaveEndTimer_.StartTimer();
 
 			currentTrophy_ = 0;
-			hasSpawnedInitialItems = false;
+			numSpawned_ = -1;
+			hasSpawnedInitialItems_ = false;
 			currentWaveArrayPosition_++;
 
 			if (currentWaveArrayPosition_ >= waves.Length) {
-				hasFinished = true;
+				hasFinished_ = true;
 				Debug.Log("GameFinished");
 				return;
 			}
-			currentWave = waves[currentWaveArrayPosition_];
+			currentWave_ = waves[currentWaveArrayPosition_];
 		}
-
-		if (currentWave.hasChangingRespawnTime) {
-			float newRespawnTime = currentWave.respawnTime - currentWave.respawnTimeModifier;
-			if(newRespawnTime > currentWave.lowestRespawnTime) {
-				currentWave.respawnTime = newRespawnTime;
+		if (currentWave_.hasChangingRespawnTime) {
+			float newRespawnTime = currentWave_.respawnTime - currentWave_.respawnTimeModifier;
+			if(newRespawnTime > currentWave_.lowestRespawnTime) {
+				currentWave_.respawnTime = newRespawnTime;
 			}
 		}
-		spawnTimer_.SetTimer(currentWave.respawnTime);
+		spawnTimer_.SetTimer(currentWave_.respawnTime);
 		spawnTimer_.StartTimer();
 	}
 

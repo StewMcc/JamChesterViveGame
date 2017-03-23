@@ -5,17 +5,17 @@ public class TrophySlot : MonoBehaviour {
 	[SerializeField]
 	Transform clampLocked = null;
 
-	TrophyShelf trophyShelf = null;
+	TrophyShelf trophyShelf_ = null;
 
-	Renderer outlineRenderer = null;
+	Renderer outlineRenderer_ = null;
 
-	Trophy connectedTrophy = null;
+	Trophy connectedTrophy_ = null;
 
 	bool isUsed = false;
 
 	void Start() {
-		outlineRenderer = GetComponent<Renderer>();
-		trophyShelf = GetComponentInParent<TrophyShelf>();
+		outlineRenderer_ = GetComponent<Renderer>();
+		trophyShelf_ = GetComponentInParent<TrophyShelf>();
 	}
 
 	public bool IsUsed() {
@@ -23,10 +23,12 @@ public class TrophySlot : MonoBehaviour {
 	}
 
 	public void ClampTrophy() {
-		// snap it to the clamp point.
-		connectedTrophy.transform.rotation = clampLocked.rotation;
-		connectedTrophy.transform.position = clampLocked.position;
-		connectedTrophy.transform.parent = clampLocked;
+		if (connectedTrophy_) {
+			// snap it to the clamp point.
+			connectedTrophy_.transform.rotation = clampLocked.rotation;
+			connectedTrophy_.transform.position = clampLocked.position;
+			connectedTrophy_.transform.parent = clampLocked;
+		}
 	}
 
 	void OnTriggerEnter(Collider collider) {
@@ -40,30 +42,28 @@ public class TrophySlot : MonoBehaviour {
 
 			trophy.LockTrophy();
 
-			connectedTrophy = trophy;
+			connectedTrophy_ = trophy;
 
 			ClampTrophy();
 
-
-
 			// fill a slot in the shelf
-			trophyShelf.SlotFilled();
+			trophyShelf_.SlotFilled();
 
-			Color previousColor = outlineRenderer.material.GetColor("_Color");
+			Color previousColor = outlineRenderer_.material.GetColor("_Color");
 
 			if (trophy.IsClean()) {				
 				SoundManager.PlaySFX(SoundManager.SFX.kCompletedGood);
 
 				Color newColor = Color.green;
 				newColor.a = previousColor.a;
-				outlineRenderer.material.SetColor("_Color", newColor);
+				outlineRenderer_.material.SetColor("_Color", newColor);
 			}
 			else {
 				SoundManager.PlaySFX(SoundManager.SFX.kCompletedBad);
 
 				Color newColor = Color.red;
 				newColor.a = previousColor.a;
-				outlineRenderer.material.SetColor("_Color", newColor);
+				outlineRenderer_.material.SetColor("_Color", newColor);
 
 			}
 

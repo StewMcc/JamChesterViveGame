@@ -5,9 +5,9 @@ public class TrophyShelf : MonoBehaviour {
 	[SerializeField]
 	TrophySlot[] slots = new TrophySlot[0];
 
-	bool isFull = false;
+	private bool isFull_ = false;
 
-	int numFilledSlots = 0;
+	private int numFilledSlots_ = 0;
 
 	private float startTime_ = 0;
 
@@ -17,7 +17,7 @@ public class TrophyShelf : MonoBehaviour {
 
 	private bool isMoving_ = false;
 
-	private float transitionTime = 3;
+	private float transitionTime_ = 3;
 
 	private void Update() {
 
@@ -27,7 +27,7 @@ public class TrophyShelf : MonoBehaviour {
 				startPosition_,
 				endPosition_,
 				startTime_,
-				transitionTime,
+				transitionTime_,
 				out isMoving_);
 			foreach (TrophySlot slot in slots) {
 				slot.ClampTrophy();
@@ -36,15 +36,15 @@ public class TrophyShelf : MonoBehaviour {
 	}
 
 	public void SlotFilled() {
-		numFilledSlots++;
+		numFilledSlots_++;
 
-		if (numFilledSlots >= slots.Length) {
-			isFull = true;
+		if (numFilledSlots_ >= slots.Length) {
+			isFull_ = true;
 		}
 	}
 
 	public bool IsFull() {
-		return isFull;
+		return isFull_;
 	}
 
 	public void MoveShelf(Vector3 newPosition) {

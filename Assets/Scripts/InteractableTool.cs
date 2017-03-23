@@ -21,11 +21,11 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	private Trophy currentTrophy_ = null;
 
-	private LittleLot.SimpleTimer delayClean = new LittleLot.SimpleTimer();
+	private LittleLot.SimpleTimer delayClean_ = new LittleLot.SimpleTimer();
 
 	protected override void Awake() {
 		base.Awake();		
-		delayClean.SetTimer(0.2f);
+		delayClean_.SetTimer(0.2f);
 	}
 
 	protected void OnCollisionEnter(Collision collision) {
@@ -68,16 +68,16 @@ public class InteractableTool : VRTK_InteractableObject {
 
 	protected override void Update() {
 		base.Update();
-		delayClean.Update();
+		delayClean_.Update();
 		if (currentTrophy_ && IsGrabbed()) {
-			if (delayClean.IsFinished()) {
+			if (delayClean_.IsFinished()) {
 				if (!requiresUseToClean) {
-					delayClean.StartTimer();
+					delayClean_.StartTimer();
 					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);
 					PlayToolSfx();
 				}
 				else if (IsUsing()) {
-					delayClean.StartTimer();
+					delayClean_.StartTimer();
 					currentTrophy_.CleanTrophy(cleaningType, cleaningRate * Time.deltaTime);					
 				}
 			}
@@ -87,6 +87,7 @@ public class InteractableTool : VRTK_InteractableObject {
 	public override void StartUsing(GameObject usingObject) {
 		base.StartUsing(usingObject);
 		if (useEffect) {
+			useEffect.Stop(true);
 			useEffect.Play(true);
 		}
 		if (requiresUseToClean) {
