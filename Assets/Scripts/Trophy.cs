@@ -153,7 +153,7 @@ public class Trophy : VRTK_InteractableObject {
 			remainingSprayedGreenPercentage_ +
 			remainingSprayedPurplePercentage_) 
 			/ (kMaxRemainingPercentage * numberOfRules_);
-		percentageDirty_ = Mathf.CeilToInt(colorMod * 100.0f);
+		percentageDirty_ = Mathf.CeilToInt(colorMod * 100.0f)/4f;
 		// Debug.Log("Percentage Dirty:" + percentageDirty_);	
 
 		Color newEmissive = Color.white * colorMod * dirtAmplifier;
